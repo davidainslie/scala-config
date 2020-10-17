@@ -12,6 +12,10 @@ package object mapping {
     def apply[A: Mappable]: Mappable[A] = implicitly[Mappable[A]]
   }
 
+  /*trait Mapping[A] {
+    def cast[V](typeable: Typeable[V], v: V)
+  }*/
+
   trait FromMap[L <: HList] {
     def apply(m: Map[String, Any]): Option[L]
   }
@@ -28,10 +32,10 @@ package object mapping {
       } yield field[K][V](r) :: t
   }
 
-  class Mapping[A] {
+  class ToMap[A/*: Mapping*/] {
     def from[R <: HList](m: Map[String, Any])(implicit generic: LabelledGeneric.Aux[A, R], fromMap: FromMap[R]): Option[A] =
       fromMap(m).map(generic.from)
   }
 
-  def to[A] = new Mapping[A]
+  def to[A/*: Mapping*/] = new ToMap[A]
 }

@@ -1,9 +1,8 @@
-package com.backwards
+package com.backwards.config
 
 import com.backwards.mapping.Mappable
 
-package object config {
-
+package object ini {
   // TODO - REMOVE
   val ftpMap = Map(
     "name" -> "my-name",

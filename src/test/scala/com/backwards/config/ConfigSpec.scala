@@ -44,6 +44,7 @@ object Apply {
       None
   }
 
+  // TODO - Might have wanted to include typeable: Typeable[V]
   implicit def hlistApply[K <: Symbol, H, T <: HList](implicit witness: Witness.Aux[K], applyH: Lazy[Apply[H]], applyT: Apply[T]): Apply[FieldType[K, H] :: T] =
     new Apply[FieldType[K, H] :: T] {
       def apply(key: String, a: FieldType[K, H] :: T): Option[V] = {
@@ -68,7 +69,7 @@ object Apply {
     }
 
   implicit class ApplyOps[A: Apply](a: A) {
-    def apply[V](key: String): Option[V] = implicitly[Apply[A]].apply(key, a).map(_.asInstanceOf[V])
+    def apply[V](key: String): Option[V] = implicitly[Apply[A]].apply(key, a).map(_.asInstanceOf[V]) // TODO - Don't like
   }
 }
 
