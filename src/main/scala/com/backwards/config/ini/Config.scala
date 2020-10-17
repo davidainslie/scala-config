@@ -36,8 +36,8 @@ import cats.implicits._
  *  - Property identifier must be a valid name for a Scala variable e.g. enabled = true within group [ftp] can be accessed from a Config class as config.ftp.enabled
  *  - Boolean is: true | false | yes | no | 1 | 0 - As a configuration of say 1 could actually be to configure an Integer, we leave the interpretation of this when setting a Boolean type.
  */
-object IniConfig {
-  type IniMap = Map[String, Map[String, Any]]
+object Config {
+  type ConfigMap = Map[String, Map[String, Any]]
 
   // TODO - Maybe update to use parser combinators instead.
   val ConfigRegex: Regex = """\[([\w]+)]""".r
@@ -61,7 +61,7 @@ object IniConfig {
     }(s)
   }
 
-  def parse(props: List[String]): IniMap = {
+  def parse(props: List[String]): ConfigMap = {
     @tailrec
     def parseProps(props: List[String], config: Map[String, Any]): (List[String], Map[String, Any]) = props match {
       case (BlankRegex(_) | CommentRegex(_)) :: rest =>
@@ -75,7 +75,7 @@ object IniConfig {
     }
 
     @tailrec
-    def parseConfig(props: List[String], config: IniMap): IniMap = props match {
+    def parseConfig(props: List[String], config: ConfigMap): ConfigMap = props match {
       case ConfigRegex(prop) :: rest =>
         parseProps(rest, Map.empty[String, Any]) match {
           case (rest, c) => parseConfig(rest, config ++ Map(prop.trim -> c))
@@ -88,6 +88,6 @@ object IniConfig {
     parseConfig(props, Map.empty[String, Map[String, Any]])
   }
 
-  def parse[F[_]: Monad](path: String): F[IniMap] =
+  def parse[F[_]: Monad](path: String): F[ConfigMap] =
     Monad[F].pure(parse(File(path).lineIterator.toList))
 }

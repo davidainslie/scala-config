@@ -4,7 +4,7 @@ import cats.Id
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import com.backwards.config.Config
-import com.backwards.config.ini.IniConfig.{parse, simplify}
+import com.backwards.config.ini.Config.{parse, simplify}
 
 class ConfigSpec extends AnyWordSpec with Matchers {
   "Config of ini" should {
@@ -85,25 +85,11 @@ class ConfigSpec extends AnyWordSpec with Matchers {
 
   "Config" should {
     "" in {
-      val blah = List(
-        """[ftp]""" -> """""",
-        """name""" -> """"hello there, ftp uploading"""",
-        """path""" -> """/tmp/""",
-        """path<production>""" -> """/srv/var/tmp/""",
-        """path<staging>""" -> """/srv/uploads/""",
-        """path<ubuntu>""" -> """/etc/var/uploads""",
-        """enabled""" -> """no"""
-      )
 
 
       val v = loadConfig[Id, Config]("src/test/resources/test.ini")
       println(v)
 
-      /*val v = loadConfig[Config]("src/test/resources/test.ini")
-      println(v)*/
-
-      /*val v = loadConfigX[Config]("src/test/resources/test.ini")
-      println(v)*/
     }
   }
 }
