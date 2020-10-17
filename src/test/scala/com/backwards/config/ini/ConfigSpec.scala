@@ -96,11 +96,11 @@ class ConfigSpec extends AnyWordSpec with Matchers {
       )
 
 
-      /*val v = loadConfig[Id, Config]("src/test/resources/test.ini")
-      println(v)*/
-
-      val v = loadConfig[Config]("src/test/resources/test.ini")
+      val v = loadConfig[Id, Config]("src/test/resources/test.ini")
       println(v)
+
+      /*val v = loadConfig[Config]("src/test/resources/test.ini")
+      println(v)*/
 
       /*val v = loadConfigX[Config]("src/test/resources/test.ini")
       println(v)*/

@@ -90,7 +90,4 @@ object IniConfig {
 
   def parse[F[_]: Monad](path: String): F[IniMap] =
     Monad[F].pure(parse(File(path).lineIterator.toList))
-
-  def parseX(path: String): IniMap =
-    parse(File(path).lineIterator.toList)
 }
