@@ -30,3 +30,32 @@ params = array,of,values
 
 Where **[group]** denotes the start of a group of related config options, **setting = value** denotes a standard setting name and associated default value, and **setting<override> = value2** denotes the value for the setting if the given override is enabled.
 If multiple enabled overrides are defined on a setting, the one defined last will have priority.
+
+## Implementation
+
+To parse an **ini** configuration into an ADT, implement [Mappable](src/main/scala/com/backwards/mapping/package.scala) for your top-level ADT configuration e.g.
+
+```scala
+final case class Config(common: Common, ftp: Ftp)
+
+final case class Common(basic_size_limit: Long, student_size_limit: Long, paid_users_size_limit: Long, path: String)
+
+final case class Ftp(name: String, path: String, enabled: Boolean)
+
+// Mappable for the top-level Config (for convenience added to companion object)
+object Config {
+  implicit val configMappable: Mappable[Config] =
+    (m: Map[String, Map[String, Any]]) =>
+      Config(
+        to[Common].from(m("common")).getOrElse(sys.error("Whoops")),
+        to[Ftp].from(m("ftp")).getOrElse(sys.error("Whoops"))
+      )
+}
+```
+
+The above ADT can be generated from an **ini** (example above) with the following line:
+
+```scala
+val config: Config =
+  loadConfig[Id, Config]("src/test/resources/test.ini")
+```
