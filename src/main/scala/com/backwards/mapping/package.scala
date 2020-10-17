@@ -25,13 +25,24 @@ package object mapping {
 
     implicit def hlist[K <: Symbol, V, T <: HList](implicit witness: Witness.Aux[K], typeable: Typeable[V], fromMap: FromMap[T]): FromMap[FieldType[K, V] :: T] =
       (m: Map[String, Any]) => {
+        /**
+         * TODO - Didn't expect to end up doing this nasty "cast" - The following follows [[shapeless.Typeable]]
+         */
         def cast(v: Any): Option[V] = {
           def cast[O](o: Option[O]): Option[V] =
             o.fold(typeable.cast(v))(v => typeable.cast(v.asInstanceOf[V]))
 
-          if (typeable.describe == "Boolean") cast(BooleanConfig.boolean(v))
-          else if (typeable.describe == "Long") cast(Try(v.toString.toLong).toOption)
-          else typeable.cast(v)
+          typeable.describe match {
+            case "Byte" => cast(Try(v.toString.toByte).toOption)
+            case "Short" => cast(Try(v.toString.toShort).toOption)
+            case "Char" => cast(Try(v.toString.charAt(0)).toOption)
+            case "Int" => cast(Try(v.toString.toInt).toOption)
+            case "Long" => cast(Try(v.toString.toLong).toOption)
+            case "Float" => cast(Try(v.toString.toFloat).toOption)
+            case "Double" => cast(Try(v.toString.toDouble).toOption)
+            case "Boolean" => cast(BooleanConfig.boolean(v))
+            case _ => typeable.cast(v)
+          }
         }
 
         for {
