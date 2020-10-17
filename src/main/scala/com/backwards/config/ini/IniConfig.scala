@@ -43,9 +43,11 @@ object IniConfig {
   // TODO - Maybe update to use parser combinators instead.
   val ConfigRegex: Regex = """\[([\w]+)]""".r
 
-  val PropRegex: Regex = """(\w+)\s*=\s*(.+)""".r
+  val PropRegex: Regex = """(.*?)\s*=\s*(.+)""".r
 
   val CommentRegex: Regex = """\s*?(;.*)""".r
+
+  val BlankRegex: Regex = """(^\s*$)""".r
 
   val PropValue: Regex = """^(.*?)(;.*)*$""".r
 
@@ -63,11 +65,11 @@ object IniConfig {
   def parse(props: List[String]): IniMap = {
     @tailrec
     def parseProps(props: List[String], config: Map[String, Any]): (List[String], Map[String, Any]) = props match {
+      case (BlankRegex(_) | CommentRegex(_)) :: rest =>
+        parseProps(rest, config)
+
       case PropRegex(k, v) :: rest =>
         parseProps(rest, config + (k.trim -> simplify(v)))
-
-      case CommentRegex(_) :: rest =>
-        parseProps(rest, config)
 
       case rest =>
         rest -> config
@@ -87,9 +89,6 @@ object IniConfig {
     parseConfig(props, Map.empty[String, Map[String, Any]])
   }
 
- /* def parse[F[_]: Monad](path: String): F[IniMap] = {
-    val xs: Iterable[String] = File(path).lines
-
-    parse(File(path).lines)
-  }*/
+  /*def parse[F[_]: Monad](path: String): F[IniMap] =
+    Monad[F].pure(parse(File(path).lines))*/
 }

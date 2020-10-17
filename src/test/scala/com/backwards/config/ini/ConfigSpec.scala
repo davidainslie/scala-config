@@ -1,12 +1,14 @@
 package com.backwards.config.ini
 
+import better.files.File
+import cats.Id
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import com.backwards.config.Config
 import com.backwards.config.ini.IniConfig.{parse, simplify}
 
 class ConfigSpec extends AnyWordSpec with Matchers {
-  "Config of ini" should {
+  /*"Config of ini" should {
     "parse a prop value" in {
       simplify("hello") mustBe "hello"
     }
@@ -70,16 +72,23 @@ class ConfigSpec extends AnyWordSpec with Matchers {
           )
         )
     }
-  }
+  }*/
 
   "Config ini file" should {
-    "be parsed into Map" ignore {
+    "be parsed into Map" in {
+
+      //println("===> Ye baby: " + File("src/test/resources/test.ini").lines)
+      println("===> Ye baby: " + parse(File("src/test/resources/test.ini").lines.toList))
+
+      //val m = parse[Id]("src/test/resources/test.ini")
+
+      //println(m)
 
 
-      val v = parse(List("[ftp]", """name = "hello there, ftp uploading"""", "enabled = true"))
+      /*val v = parse(List("[ftp]", """name = "hello there, ftp uploading"""", "enabled = true"))
 
       println()
-      println(v)
+      println(v)*/
     }
 
     /*"...... be parsed into Map" in {
@@ -95,10 +104,7 @@ class ConfigSpec extends AnyWordSpec with Matchers {
     }*/
   }
 
-  "Config" should {
-
-
-
+  /*"Config" should {
     "" in {
       val blah = List(
         """[ftp]""" -> """""",
@@ -114,7 +120,7 @@ class ConfigSpec extends AnyWordSpec with Matchers {
       val v = loadConfig[Config]("")
       println(v)
     }
-  }
+  }*/
 }
 
 /*
