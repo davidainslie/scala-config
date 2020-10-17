@@ -76,8 +76,9 @@ object Apply {
 class ConfigSpec extends AnyWordSpec with Matchers {
   "4" should {
     "" in {
+      val common = Common(basic_size_limit = 10, student_size_limit = 11, paid_users_size_limit = 12, path = "some-path")
       val ftp = Ftp("my-name", "my-path", true)
-      val config = Config(ftp)
+      val config = Config(common, ftp)
 
       import Apply._
 

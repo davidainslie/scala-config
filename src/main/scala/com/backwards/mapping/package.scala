@@ -1,5 +1,6 @@
 package com.backwards
 
+import scala.util.Try
 import cats.implicits._
 import shapeless.labelled.{FieldType, field}
 import shapeless.{::, HList, HNil, LabelledGeneric, Typeable, Witness}
@@ -24,11 +25,14 @@ package object mapping {
 
     implicit def hlist[K <: Symbol, V, T <: HList](implicit witness: Witness.Aux[K], typeable: Typeable[V], fromMap: FromMap[T]): FromMap[FieldType[K, V] :: T] =
       (m: Map[String, Any]) => {
-        def cast(v: Any): Option[V] =
-          if (typeable.describe == "Boolean")
-            BooleanConfig.boolean(v).fold(typeable.cast(v))(b => typeable.cast(b.asInstanceOf[V]))
-          else
-            typeable.cast(v)
+        def cast(v: Any): Option[V] = {
+          def cast[O](o: Option[O]): Option[V] =
+            o.fold(typeable.cast(v))(v => typeable.cast(v.asInstanceOf[V]))
+
+          if (typeable.describe == "Boolean") cast(BooleanConfig.boolean(v))
+          else if (typeable.describe == "Long") cast(Try(v.toString.toLong).toOption)
+          else typeable.cast(v)
+        }
 
         for {
           v <- m.get(witness.value.name)
