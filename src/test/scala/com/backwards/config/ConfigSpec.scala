@@ -76,7 +76,7 @@ object Apply {
 class ConfigSpec extends AnyWordSpec with Matchers {
   "4" should {
     "" in {
-      val ftp = Ftp("my-name", "my-path", true, 1)
+      val ftp = Ftp("my-name", "my-path", true)
       val config = Config(ftp)
 
       import Apply._
@@ -95,9 +95,6 @@ class ConfigSpec extends AnyWordSpec with Matchers {
       val path: Option[String] = ftp[String]("path")
 
       val enabled = ftp("enabled")
-
-      val temp: Option[Int] = ftp("temp")
-      println(temp.get)
 
       val nonExisting: Option[Int] = ftp("non-existing")
       println(nonExisting)

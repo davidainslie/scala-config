@@ -3,7 +3,7 @@ package com.backwards
 import cats.implicits._
 import shapeless.labelled.{FieldType, field}
 import shapeless.{::, HList, HNil, LabelledGeneric, Typeable, Witness}
-import com.backwards.config.BooleanType
+import com.backwards.config.BooleanConfig
 
 package object mapping {
   trait Mappable[A] {
@@ -25,12 +25,10 @@ package object mapping {
     implicit def hlist[K <: Symbol, V, T <: HList](implicit witness: Witness.Aux[K], typeable: Typeable[V], fromMap: FromMap[T]): FromMap[FieldType[K, V] :: T] =
       (m: Map[String, Any]) => {
         def cast(v: Any): Option[V] =
-          if (typeable.describe == "Boolean") v match {
-            case BooleanType(b) => typeable.cast(b)
-            case _ => typeable.cast(v)
-          } else {
+          if (typeable.describe == "Boolean")
+            BooleanConfig.boolean(v).fold(typeable.cast(v))(b => typeable.cast(b.asInstanceOf[V]))
+          else
             typeable.cast(v)
-          }
 
         for {
           v <- m.get(witness.value.name)

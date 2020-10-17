@@ -2,10 +2,9 @@ package com.backwards.config.ini
 
 import scala.annotation.tailrec
 import scala.util.matching.Regex
-import cats.Monad
-import cats.effect.IO
-import cats.implicits._
 import better.files._
+import cats.Monad
+import cats.implicits._
 
 /**
  * INI file is of the form:
@@ -89,6 +88,9 @@ object IniConfig {
     parseConfig(props, Map.empty[String, Map[String, Any]])
   }
 
-  /*def parse[F[_]: Monad](path: String): F[IniMap] =
-    Monad[F].pure(parse(File(path).lines))*/
+  def parse[F[_]: Monad](path: String): F[IniMap] =
+    Monad[F].pure(parse(File(path).lineIterator.toList))
+
+  def parseX(path: String): IniMap =
+    parse(File(path).lineIterator.toList)
 }

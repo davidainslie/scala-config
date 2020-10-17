@@ -9,4 +9,4 @@ object Config {
     (m: Map[String, Map[String, Any]]) => Config(to[Ftp].from(m("ftp")).getOrElse(sys.error("Whoops")))
 }
 
-final case class Ftp(name: String, path: String, enabled: Boolean, temp: Int)
+final case class Ftp(name: String, path: String, enabled: Boolean)
