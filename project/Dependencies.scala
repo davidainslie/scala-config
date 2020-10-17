@@ -2,8 +2,9 @@ import sbt._
 
 object Dependencies {
   def apply(): Seq[ModuleID] = Seq(
-    scalatest, scalaMock,
-    monix, cats, monocle, refined, shapeless
+    scalatest, scalaMock, scalacheck, scalatestplus,
+    monix, cats, monocle, refined, shapeless,
+    betterFiles
   ).flatten
 
   lazy val scalatest: Seq[ModuleID] = Seq(
@@ -12,6 +13,14 @@ object Dependencies {
 
   lazy val scalaMock: Seq[ModuleID] = Seq(
     "org.scalamock" %% "scalamock" % "5.0.0" % "test, it" withSources() withJavadoc()
+  )
+
+  lazy val scalacheck: Seq[ModuleID] = Seq(
+    "org.scalacheck" %% "scalacheck" % "1.14.3" % "test, it" withSources() withJavadoc()
+  )
+
+  lazy val scalatestplus: Seq[ModuleID] = Seq(
+    "org.scalatestplus" %% "scalatestplus-scalacheck" % "3.1.0.0-RC2" % "test, it" withSources() withJavadoc()
   )
 
   lazy val monix: Seq[ModuleID] = Seq(
@@ -51,5 +60,9 @@ object Dependencies {
 
   lazy val shapeless: Seq[ModuleID] = Seq(
     "com.chuusai" %% "shapeless" % "2.3.3"
+  )
+
+  lazy val betterFiles: Seq[ModuleID] = Seq(
+    "com.github.pathikrit" %% "better-files" % "3.9.1" withSources() withJavadoc()
   )
 }
