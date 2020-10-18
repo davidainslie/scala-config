@@ -61,7 +61,14 @@ object Parser {
     }(s)
   }
 
-  def parse(props: List[String]): ConfigMap = {
+  def parseOverrides(m: Map[String, Any], overrides: String*): Map[String, Any] =
+    overrides.lastOption.map { o =>
+      m ++ m.filter(_._1.endsWith(s"<$o>")).map { case (k, v) =>
+        k.replaceAll(s"<$o>", "") -> v
+      }
+    } getOrElse m filterNot(_._1.endsWith(">"))
+
+  def parse(props: List[String], overrides: String*): ConfigMap = {
     @tailrec
     def parseProps(props: List[String], config: Map[String, Any]): (List[String], Map[String, Any]) = props match {
       case (BlankRegex(_) | CommentRegex(_)) :: rest =>
@@ -71,7 +78,7 @@ object Parser {
         parseProps(rest, config + (k.trim -> simplify(v)))
 
       case rest =>
-        rest -> config
+        rest -> parseOverrides(config, overrides: _*)
     }
 
     @tailrec
@@ -88,6 +95,6 @@ object Parser {
     parseConfig(props, Map.empty[String, Map[String, Any]])
   }
 
-  def parse[F[_]: Monad](path: String): F[ConfigMap] =
-    Monad[F].pure(parse(File(path).lineIterator.toList))
+  def parse[F[_]: Monad](path: String, overrides: String*): F[ConfigMap] =
+    Monad[F].pure(parse(File(path).lineIterator.toList, overrides: _*))
 }

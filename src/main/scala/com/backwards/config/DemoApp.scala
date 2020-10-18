@@ -10,7 +10,7 @@ object DemoApp extends IOApp {
   def run(args: List[String]): IO[ExitCode] =
     for {
       logger <- Slf4jLogger.create[IO]
-      config <- loadConfig[Config]("src/test/resources/test.ini")
+      config <- loadConfig[Config]("src/test/resources/test.ini", "staging")
       _ <- logger info green(s"Configuration loaded: $config")
       _ <- logger info blue("Access config attributes as normal:")
       _ <- logger info green(s"FTP name: ${config.ftp.name}")

@@ -24,7 +24,7 @@ class ParserSpec extends AnyWordSpec with Matchers {
       simplify(""" "hello" ;comment """) mustBe "hello"
     }
 
-    "parse a group of text" in {
+    "parse a group of props" in {
       val props = List(
         "[ftp]", "name = ftp uploading", "enabled = true"
       )
@@ -38,7 +38,7 @@ class ParserSpec extends AnyWordSpec with Matchers {
         )
     }
 
-    "parse a group of text ignoring comments" in {
+    "parse a group of props ignoring comments" in {
       val props = List(
         "[ftp]", "name = ftp uploading", ";comment", "enabled = true", ";  comment"
       )
@@ -52,7 +52,7 @@ class ParserSpec extends AnyWordSpec with Matchers {
         )
     }
 
-    "parse groups of text" in {
+    "parse groups of props" in {
       val props = List(
         "[ftp]", """name = "ftp uploading"""", "enabled = true",
         "[http]", """name = "http blah blah"""", "canPost = on"
@@ -67,6 +67,35 @@ class ParserSpec extends AnyWordSpec with Matchers {
           "http" -> Map(
             "name" -> "http blah blah",
             "canPost" -> "on"
+          )
+        )
+    }
+  }
+
+  "Config of ini with overrides" should {
+    val props = List(
+      "[ftp]", "name = ftp uploading", "enabled = true",
+               "path = default path", "path<dev> = dev path", "path<prod> = prod path"
+    )
+
+    "parse a group of props that resolve to overrides default" in {
+      parse(props) mustBe
+        Map(
+          "ftp" -> Map(
+            "name" -> "ftp uploading",
+            "enabled" -> "true",
+            "path" -> "default path"
+          )
+        )
+    }
+
+    "parse a group of props that resolve to last given overrides" in {
+      parse(props, "dev", "prod") mustBe
+        Map(
+          "ftp" -> Map(
+            "name" -> "ftp uploading",
+            "enabled" -> "true",
+            "path" -> "prod path"
           )
         )
     }

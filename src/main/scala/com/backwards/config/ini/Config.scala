@@ -13,7 +13,7 @@ object Config {
    * NOTE - Loading of configuration should be at "end of the world", and as per requirement, a side-effecting error can be raised if loading of configuration failed.
    */
   def loadConfig[C: Mappable](path: String, overrides: String*): IO[C] = {
-    OptionT(parse[IO](path).map(Mappable[C].map))
+    OptionT(parse[IO](path, overrides: _*).map(Mappable[C].map))
       .getOrElseF(IO raiseError new Exception(s"Failed to load ini $path into requested ADT"))
   }
 }
