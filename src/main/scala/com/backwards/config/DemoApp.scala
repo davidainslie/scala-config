@@ -11,10 +11,11 @@ object DemoApp extends IOApp {
     for {
       logger <- Slf4jLogger.create[IO]
       config <- loadConfig[Config]("src/test/resources/test.ini", "staging", "itscript")
-      _ <- logger info green(s"Configuration loaded: $config")
-      _ <- logger info blue("Access config attributes as normal:")
-      _ <- logger info green(s"FTP name: ${config.ftp.name}")
-      _ <- logger info blue("Or with Apply functionality imported, access config attributes via named attribute:")
-      _ <- logger info green(s"FTP name via named attribute: ${config.ftp("name")}")
+      _ <- logger info
+        green(s"Configuration loaded: $config") +
+        blue("\nAccess config attributes as normal:") +
+        green(s"\nFTP name: ${config.ftp.name}") +
+        blue("\nOr with Apply functionality imported, access config attributes via named attribute:") +
+        green(s"\nFTP name via named attribute: ${config.ftp("name")}")
     } yield ExitCode.Success
 }

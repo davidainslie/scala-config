@@ -40,6 +40,10 @@ object FromMap {
           case "Float" => cast(Try(v.toString.toFloat).toOption)
           case "Double" => cast(Try(v.toString.toDouble).toOption)
           case "Boolean" => cast(BooleanConfig.boolean(v))
+          case "Seq[String]" => cast(Try(v.toString.split(",").toSeq).toOption)
+          case "List[String]" => cast(Try(v.toString.split(",").toList).toOption)
+          case "Vector[String]" => cast(Try(v.toString.split(",").toVector).toOption)
+          case "Set[String]" => cast(Try(v.toString.split(",").toSet).toOption)
           case _ => typeable.cast(v)
         }
       }

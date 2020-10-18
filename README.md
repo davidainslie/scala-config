@@ -46,11 +46,13 @@ import cats.implicits.catsSyntaxTuple2Semigroupal
 import com.backwards.config.ini.Mappable
 import com.backwards.config.ini.Mapping.to
 
-final case class Config(common: Common, ftp: Ftp)
+final case class Config(common: Common, ftp: Ftp, http: Http)
 
 final case class Common(basic_size_limit: Long, student_size_limit: Long, paid_users_size_limit: Long, path: String)
 
 final case class Ftp(name: String, path: String, enabled: Boolean)
+
+final case class Http(name: String, path: String, params: List[String])
 
 // Mappable for the top-level Config (for convenience added to companion object)
 object Config {

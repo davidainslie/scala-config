@@ -16,4 +16,4 @@ final case class Common(basic_size_limit: Long, student_size_limit: Long, paid_u
 
 final case class Ftp(name: String, path: String, enabled: Boolean)
 
-final case class Http(name: String, path: String)
+final case class Http(name: String, path: String, params: List[String])

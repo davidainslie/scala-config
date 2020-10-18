@@ -10,7 +10,7 @@ class ApplySpec extends AnyWordSpec with Matchers {
     "provide ADT attribute access via 'apply' function" in {
       val common = Common(basic_size_limit = 10, student_size_limit = 11, paid_users_size_limit = 12, path = "some-path")
       val ftp = Ftp("ftp-name", "ftp-path", enabled = true)
-      val http = Http("http-name", "http-path")
+      val http = Http("http-name", "http-path", List("array", "of", "values"))
 
       val config = Config(common, ftp, http)
 
