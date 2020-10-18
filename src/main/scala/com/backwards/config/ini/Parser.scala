@@ -48,25 +48,32 @@ object Parser {
 
   val BlankRegex: Regex = """(^\s*$)""".r
 
-  val PropValue: Regex = """^(.*?)(;.*)*$""".r
+  val PropValueRegex: Regex = """^(.*?)(;.*)*$""".r
+
+  val OverrideRegex: Regex = ".*?<(.*?)>".r
 
   val trim: String => String =
     _.trim
 
   val simplify: String => String = trim andThen {
-    case PropValue(s, _) => trim.andThen { s =>
+    case PropValueRegex(s, _) => trim.andThen { s =>
       if (s.startsWith("\"") && s.endsWith("\"")) s.init.drop(1)
       else if (s.startsWith("\'") && s.endsWith("\'")) s.init.drop(1)
       else s
     }(s)
   }
 
-  def parseOverrides(m: Map[String, Any], overrides: String*): Map[String, Any] =
-    overrides.lastOption.map { o =>
+  def parseOverrides(m: Map[String, Any], overrides: String*): Map[String, Any] = {
+    val availableOverrides: Iterable[String] = m.keys.collect {
+      case OverrideRegex(o) => o
+    }
+
+    overrides.intersect(availableOverrides.toList).lastOption.map { o =>
       m ++ m.filter(_._1.endsWith(s"<$o>")).map { case (k, v) =>
         k.replaceAll(s"<$o>", "") -> v
       }
     } getOrElse m filterNot(_._1.endsWith(">"))
+  }
 
   def parse(props: List[String], overrides: String*): ConfigMap = {
     @tailrec

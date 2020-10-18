@@ -99,6 +99,24 @@ class ParserSpec extends AnyWordSpec with Matchers {
           )
         )
     }
+
+    "parse a group of props that resolve to different last given overrides (per group)" in {
+      val moreProps = props ++ List(
+        "[common]", "path = default path", "path<itscript> = itscript path"
+      )
+
+      parse(moreProps, "dev", "itscript") mustBe
+        Map(
+          "common" -> Map(
+            "path" -> "itscript path"
+          ),
+          "ftp" -> Map(
+            "name" -> "ftp uploading",
+            "enabled" -> "true",
+            "path" -> "dev path"
+          )
+        )
+    }
   }
 
   "Config ini file" should {

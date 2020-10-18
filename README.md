@@ -69,7 +69,9 @@ import com.backwards.config.ini.Config.loadConfig
 loadConfig[Config]("src/test/resources/test.ini")
 ```
 
-Also, see the [Demo App](src/main/scala/com/backwards/config/DemoApp.scala):
+Note that **overrides** can be included with **loadConfig**.
+
+Also, see the [Demo App](src/main/scala/com/backwards/config/DemoApp.scala) which has **overrides** for [test.ini](src/test/resources/test.ini):
 
 ```bash
 sbt run
