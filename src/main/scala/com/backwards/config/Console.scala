@@ -8,4 +8,7 @@ object Console {
 
   val green: String => String =
     GREEN + _ + RESET
+
+  val blue: String => String =
+    BLUE + _ + RESET
 }
