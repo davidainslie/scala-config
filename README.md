@@ -33,6 +33,12 @@ If multiple enabled overrides are defined on a setting, the one defined last wil
 
 ## Implementation
 
+Run tests:
+
+```bash
+sbt test
+```
+
 To parse an **ini** configuration into an ADT, implement [Mappable](src/main/scala/com/backwards/config/ini/Mappable.scala) for your top-level ADT configuration e.g.
 
 ```scala
@@ -63,4 +69,8 @@ import com.backwards.config.ini.Config.loadConfig
 loadConfig[Config]("src/test/resources/test.ini")
 ```
 
-Also, see the [Demo App](src/main/scala/com/backwards/config/DemoApp.scala)
+Also, see the [Demo App](src/main/scala/com/backwards/config/DemoApp.scala):
+
+```bash
+sbt run
+```

@@ -7,10 +7,10 @@ import com.backwards.config.ini.Config.loadConfig
 
 class ConfigSpec extends AnyWordSpec with Matchers {
   "Config" should {
-    "" in {
-      val v = loadConfig[Config]("src/test/resources/test.ini")
-      println(v.unsafeRunSync())
+    "be loaded" in {
+      val config = loadConfig[Config]("src/test/resources/test.ini")
 
+      config.unsafeRunSync() mustBe a [Config]
     }
   }
 }
