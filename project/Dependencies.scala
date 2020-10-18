@@ -3,6 +3,7 @@ import sbt._
 object Dependencies {
   def apply(): Seq[ModuleID] = Seq(
     scalatest, scalaMock, scalacheck, scalatestplus,
+    console4Cats, log4Cats, fansi, logback,
     monix, cats, monocle, refined, shapeless,
     betterFiles
   ).flatten
@@ -21,6 +22,27 @@ object Dependencies {
 
   lazy val scalatestplus: Seq[ModuleID] = Seq(
     "org.scalatestplus" %% "scalatestplus-scalacheck" % "3.1.0.0-RC2" % "test, it" withSources() withJavadoc()
+  )
+
+  lazy val console4Cats: Seq[ModuleID] = Seq(
+    "dev.profunktor" %% "console4cats" % "0.8.1"
+  )
+
+  lazy val log4Cats: Seq[ModuleID] = {
+    val group = "io.chrisdavenport"
+    val version = "1.1.1"
+
+    Seq(
+      "log4cats-core", "log4cats-slf4j"
+    ).map(group %% _ % version)
+  }
+
+  lazy val fansi: Seq[ModuleID] = Seq(
+    "com.lihaoyi" %% "fansi" % "0.2.7"
+  )
+
+  lazy val logback: Seq[ModuleID] = Seq(
+    "ch.qos.logback" % "logback-classic" % "1.3.0-alpha5"
   )
 
   lazy val monix: Seq[ModuleID] = Seq(

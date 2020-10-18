@@ -33,9 +33,13 @@ If multiple enabled overrides are defined on a setting, the one defined last wil
 
 ## Implementation
 
-To parse an **ini** configuration into an ADT, implement [Mappable](src/main/scala/com/backwards/mapping/package.scala) for your top-level ADT configuration e.g.
+To parse an **ini** configuration into an ADT, implement [Mappable](src/main/scala/com/backwards/config/ini/Mappable.scala) for your top-level ADT configuration e.g.
 
 ```scala
+import cats.implicits.catsSyntaxTuple2Semigroupal
+import com.backwards.config.ini.Mappable
+import com.backwards.config.ini.Mapping.to
+
 final case class Config(common: Common, ftp: Ftp)
 
 final case class Common(basic_size_limit: Long, student_size_limit: Long, paid_users_size_limit: Long, path: String)
@@ -46,16 +50,17 @@ final case class Ftp(name: String, path: String, enabled: Boolean)
 object Config {
   implicit val configMappable: Mappable[Config] =
     (m: Map[String, Map[String, Any]]) =>
-      Config(
-        to[Common].from(m("common")).getOrElse(sys.error("Whoops")),
-        to[Ftp].from(m("ftp")).getOrElse(sys.error("Whoops"))
-      )
+      (to[Common].from(m("common")), to[Ftp].from(m("ftp"))).mapN(Config.apply)
 }
 ```
 
 The above ADT can be generated from an **ini** (example above) with the following line:
 
 ```scala
-val config: Config =
-  loadConfig[Id, Config]("src/test/resources/test.ini")
+import com.backwards.config.Config
+import com.backwards.config.ini.Config.loadConfig
+
+loadConfig[Config]("src/test/resources/test.ini")
 ```
+
+Also, see the [Demo App](src/main/scala/com/backwards/config/DemoApp.scala)

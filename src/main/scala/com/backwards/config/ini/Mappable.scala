@@ -3,11 +3,11 @@ package com.backwards.config.ini
 import scala.util.Try
 import cats.implicits._
 import shapeless.labelled.{FieldType, field}
-import shapeless.{::, HList, HNil, LabelledGeneric, Typeable, Witness}
+import shapeless.{::, HList, HNil, Typeable, Witness}
 import com.backwards.config.BooleanConfig
 
 trait Mappable[A] {
-  def map(m: Map[String, Map[String, Any]]): A
+  def map(m: Map[String, Map[String, Any]]): Option[A]
 }
 
 object Mappable {
