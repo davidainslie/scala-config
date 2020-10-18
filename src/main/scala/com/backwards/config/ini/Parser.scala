@@ -50,7 +50,7 @@ object Parser {
 
   val PropValueRegex: Regex = """^(.*?)(;.*)*$""".r
 
-  val OverrideRegex: Regex = ".*?<(.*?)>".r
+  val OverrideRegex: Regex = "(.*?)<(.*?)>".r
 
   val trim: String => String =
     _.trim
@@ -64,13 +64,13 @@ object Parser {
   }
 
   def parseOverrides(m: Map[String, Any], overrides: String*): Map[String, Any] = {
-    val availableOverrides: Iterable[String] = m.keys.collect {
-      case OverrideRegex(o) => o
-    }
+    val availableOverrides: List[String] = m.keys.collect {
+      case OverrideRegex(_, o) => o
+    } toList
 
-    overrides.intersect(availableOverrides.toList).lastOption.map { o =>
-      m ++ m.filter(_._1.endsWith(s"<$o>")).map { case (k, v) =>
-        k.replaceAll(s"<$o>", "") -> v
+    overrides.filter(availableOverrides.contains).lastOption.map { o =>
+      m ++ m.collect {
+        case (OverrideRegex(k, `o`), v) => k -> v
       }
     } getOrElse m filterNot(_._1.endsWith(">"))
   }
