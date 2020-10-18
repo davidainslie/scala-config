@@ -1,6 +1,7 @@
 package com.backwards.config
 
-import com.backwards.mapping._
+import com.backwards.config.ini.Mappable
+import com.backwards.config.ini.Mapping.to
 
 final case class Config(common: Common, ftp: Ftp)
 

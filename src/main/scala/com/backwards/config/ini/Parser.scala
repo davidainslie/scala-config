@@ -1,19 +1,5 @@
 package com.backwards.config.ini
 
-import cats.Monad
-
-object Config {
-  /**
-   * Instantiate some configuration ADT represented here by C.
-   * Note that the loading (from some path) is performed within the context of a Monad simply to highlight the side-effect of interacting with an external system.
-   */
-  def loadConfig[F[_]: Monad, C: Mappable](path: String, overrides: String*): F[C] =
-    Monad[F].map(Parser.parse(path)) { m =>
-      Mappable[C].map(m)
-    }
-}
-
-/*
 import scala.annotation.tailrec
 import scala.util.matching.Regex
 import better.files._
@@ -50,7 +36,7 @@ import cats.implicits._
  *  - Property identifier must be a valid name for a Scala variable e.g. enabled = true within group [ftp] can be accessed from a Config class as config.ftp.enabled
  *  - Boolean is: true | false | yes | no | 1 | 0 - As a configuration of say 1 could actually be to configure an Integer, we leave the interpretation of this when setting a Boolean type.
  */
-object Config {
+object Parser {
   type ConfigMap = Map[String, Map[String, Any]]
 
   // TODO - Maybe update to use parser combinators instead.
@@ -104,4 +90,4 @@ object Config {
 
   def parse[F[_]: Monad](path: String): F[ConfigMap] =
     Monad[F].pure(parse(File(path).lineIterator.toList))
-}*/
+}
