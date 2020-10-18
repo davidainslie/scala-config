@@ -25,9 +25,9 @@ def project(id: String, base: File): Project =
         "-language:higherKinds",
         "-language:existentials",
         "-language:postfixOps",
-        "-Ymacro-annotations"/*,
+        "-Ymacro-annotations",
         "-Xfatal-warnings",
-        "-Ywarn-value-discard"*/ // TODO - PUT BACK
+        "-Ywarn-value-discard"
       ),
       fork := true
     )
