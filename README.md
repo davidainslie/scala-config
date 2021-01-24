@@ -58,7 +58,7 @@ final case class Http(name: String, path: String, params: List[String])
 object Config {
   implicit val configMappable: Mappable[Config] =
     (m: Map[String, Map[String, Any]]) =>
-      (to[Common].from(m("common")), to[Ftp].from(m("ftp"))).mapN(Config.apply)
+      (to[Common].from(m("common")), to[Ftp].from(m("ftp")), to[Http].from(m("http"))).mapN(Config.apply)
 }
 ```
 
